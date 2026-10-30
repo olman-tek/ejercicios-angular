@@ -1,0 +1,7 @@
+<h2>Registro de estudiantes - Iniciar sesión</h2>
+<input type="text" placeholder="Usuario" [(ngModel)]="usuario" />
+<input type="password" placeholder="Contraseña" [(ngModel)]="contrasena" />
+<button (click)="ingresar()">Ingresar</button>
+@if (mensaje) {
+  <p>{{ mensaje }}</p>
+}
