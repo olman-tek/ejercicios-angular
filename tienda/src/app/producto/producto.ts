@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
 interface Producto {
@@ -11,12 +12,18 @@ interface Producto {
 
 @Component({
   selector: 'app-producto',
-  imports: [],
+  imports: [FormsModule],
   templateUrl: './producto.html',
   styleUrl: './producto.css',
 })
 export class ProductoComponent implements OnInit {
   productos: Producto[] = [];
+
+  codigo = '';
+  nombre = '';
+  precio: number | null = null;
+  existencias: number | null = null;
+  error = '';
 
   constructor(private router: Router) {}
 
@@ -40,5 +47,37 @@ export class ProductoComponent implements OnInit {
   cerrarSesion() {
     localStorage.removeItem('sesionTienda');
     this.router.navigate(['/login']);
+  }
+
+  guardar() {
+    this.error = '';
+    const codigo = this.codigo.trim();
+    const nombre = this.nombre.trim();
+
+    if (!codigo || !nombre) {
+      this.error = 'Código y nombre son obligatorios';
+      return;
+    }
+    if (this.precio === null || this.precio <= 0) {
+      this.error = 'El precio debe ser mayor que cero';
+      return;
+    }
+    if (this.existencias === null || !Number.isInteger(this.existencias) || this.existencias < 0) {
+      this.error = 'Las existencias deben ser un entero mayor o igual que cero';
+      return;
+    }
+
+    const nuevoId = this.productos.length ? Math.max(...this.productos.map(p => p.id)) + 1 : 1;
+    this.productos.push({ id: nuevoId, codigo, nombre, precio: this.precio, existencias: this.existencias });
+    this.guardarEnStorage();
+    this.limpiar();
+  }
+
+  limpiar() {
+    this.codigo = '';
+    this.nombre = '';
+    this.precio = null;
+    this.existencias = null;
+    this.error = '';
   }
 }
