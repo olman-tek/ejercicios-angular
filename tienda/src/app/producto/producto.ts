@@ -24,6 +24,7 @@ export class ProductoComponent implements OnInit {
   precio: number | null = null;
   existencias: number | null = null;
   error = '';
+  idEditando: number | null = null;
 
   constructor(private router: Router) {}
 
@@ -67,13 +68,34 @@ export class ProductoComponent implements OnInit {
       return;
     }
 
-    const nuevoId = this.productos.length ? Math.max(...this.productos.map(p => p.id)) + 1 : 1;
-    this.productos.push({ id: nuevoId, codigo, nombre, precio: this.precio, existencias: this.existencias });
+    if (this.idEditando === null) {
+      const nuevoId = this.productos.length ? Math.max(...this.productos.map(p => p.id)) + 1 : 1;
+      this.productos.push({ id: nuevoId, codigo, nombre, precio: this.precio, existencias: this.existencias });
+    } else {
+      const i = this.productos.findIndex(p => p.id === this.idEditando);
+      if (i !== -1) {
+        this.productos[i] = { id: this.idEditando, codigo, nombre, precio: this.precio, existencias: this.existencias };
+      }
+    }
     this.guardarEnStorage();
     this.limpiar();
   }
 
+  editar(producto: Producto) {
+    this.idEditando = producto.id;
+    this.codigo = producto.codigo;
+    this.nombre = producto.nombre;
+    this.precio = producto.precio;
+    this.existencias = producto.existencias;
+    this.error = '';
+  }
+
+  cancelar() {
+    this.limpiar();
+  }
+
   limpiar() {
+    this.idEditando = null;
     this.codigo = '';
     this.nombre = '';
     this.precio = null;
