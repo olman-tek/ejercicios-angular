@@ -1,12 +1,15 @@
 <h2>Catálogo de libros</h2>
 <button (click)="cerrarSesion()">Cerrar sesión</button>
 
-<h3>Registrar libro</h3>
+<h3>{{ idEditando === null ? 'Registrar libro' : 'Editar libro (ID ' + idEditando + ')' }}</h3>
 <input type="text" placeholder="Código" [(ngModel)]="codigo" />
 <input type="text" placeholder="Título" [(ngModel)]="titulo" />
 <input type="text" placeholder="Autor" [(ngModel)]="autor" />
 <input type="number" placeholder="Año" [(ngModel)]="anio" />
-<button (click)="guardar()">Guardar</button>
+<button (click)="guardar()">{{ idEditando === null ? 'Guardar' : 'Actualizar' }}</button>
+@if (idEditando !== null) {
+  <button (click)="cancelar()">Cancelar</button>
+}
 @if (error) {
   <p style="color: red">{{ error }}</p>
 }
@@ -18,7 +21,7 @@
 } @else {
   <table border="1" cellpadding="6">
     <thead>
-      <tr><th>ID</th><th>Código</th><th>Título</th><th>Autor</th><th>Año</th></tr>
+      <tr><th>ID</th><th>Código</th><th>Título</th><th>Autor</th><th>Año</th><th>Acciones</th></tr>
     </thead>
     <tbody>
       @for (l of libros; track l.id) {
@@ -28,6 +31,7 @@
           <td>{{ l.titulo }}</td>
           <td>{{ l.autor }}</td>
           <td>{{ l.anio }}</td>
+          <td><button (click)="editar(l)">Editar</button></td>
         </tr>
       }
     </tbody>

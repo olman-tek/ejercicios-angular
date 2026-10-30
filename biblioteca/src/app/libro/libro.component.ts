@@ -24,6 +24,7 @@ export class LibroComponent implements OnInit {
   autor = '';
   anio: number | null = null;
   error = '';
+  idEditando: number | null = null;
 
   constructor(private router: Router) {}
 
@@ -64,13 +65,34 @@ export class LibroComponent implements OnInit {
       return;
     }
 
-    const nuevoId = this.libros.length ? Math.max(...this.libros.map(l => l.id)) + 1 : 1;
-    this.libros.push({ id: nuevoId, codigo, titulo, autor, anio: this.anio });
+    if (this.idEditando === null) {
+      const nuevoId = this.libros.length ? Math.max(...this.libros.map(l => l.id)) + 1 : 1;
+      this.libros.push({ id: nuevoId, codigo, titulo, autor, anio: this.anio });
+    } else {
+      const i = this.libros.findIndex(l => l.id === this.idEditando);
+      if (i !== -1) {
+        this.libros[i] = { id: this.idEditando, codigo, titulo, autor, anio: this.anio };
+      }
+    }
     this.guardarEnStorage();
     this.limpiar();
   }
 
+  editar(libro: Libro) {
+    this.idEditando = libro.id;
+    this.codigo = libro.codigo;
+    this.titulo = libro.titulo;
+    this.autor = libro.autor;
+    this.anio = libro.anio;
+    this.error = '';
+  }
+
+  cancelar() {
+    this.limpiar();
+  }
+
   limpiar() {
+    this.idEditando = null;
     this.codigo = '';
     this.titulo = '';
     this.autor = '';
