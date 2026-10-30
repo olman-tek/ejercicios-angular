@@ -31,7 +31,10 @@
           <td>{{ l.titulo }}</td>
           <td>{{ l.autor }}</td>
           <td>{{ l.anio }}</td>
-          <td><button (click)="editar(l)">Editar</button></td>
+          <td>
+            <button (click)="editar(l)">Editar</button>
+            <button (click)="eliminar(l.id)">Eliminar</button>
+          </td>
         </tr>
       }
     </tbody>

@@ -91,6 +91,16 @@ export class LibroComponent implements OnInit {
     this.limpiar();
   }
 
+  eliminar(id: number) {
+    if (confirm('¿Seguro que desea eliminar este libro?')) {
+      this.libros = this.libros.filter(l => l.id !== id);
+      this.guardarEnStorage();
+      if (this.idEditando === id) {
+        this.limpiar();
+      }
+    }
+  }
+
   limpiar() {
     this.idEditando = null;
     this.codigo = '';
