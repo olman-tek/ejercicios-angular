@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
 interface Estudiante {
@@ -11,12 +12,18 @@ interface Estudiante {
 
 @Component({
   selector: 'app-estudiante',
-  imports: [],
+  imports: [FormsModule],
   templateUrl: './estudiante.html',
   styleUrl: './estudiante.css',
 })
 export class EstudianteComponent implements OnInit {
   estudiantes: Estudiante[] = [];
+
+  cuenta = '';
+  nombre = '';
+  carrera = '';
+  fechaIngreso = '';
+  error = '';
 
   constructor(private router: Router) {}
 
@@ -40,5 +47,35 @@ export class EstudianteComponent implements OnInit {
   cerrarSesion() {
     localStorage.removeItem('sesionEstudiantes');
     this.router.navigate(['/login']);
+  }
+
+  guardar() {
+    this.error = '';
+    const cuenta = this.cuenta.trim();
+    const nombre = this.nombre.trim();
+    const carrera = this.carrera.trim();
+    const fechaIngreso = this.fechaIngreso;
+
+    if (!cuenta || !nombre || !carrera) {
+      this.error = 'Cuenta, nombre y carrera son obligatorios';
+      return;
+    }
+    if (!fechaIngreso) {
+      this.error = 'La fecha de ingreso es obligatoria';
+      return;
+    }
+
+    const nuevoId = this.estudiantes.length ? Math.max(...this.estudiantes.map(e => e.id)) + 1 : 1;
+    this.estudiantes.push({ id: nuevoId, cuenta, nombre, carrera, fechaIngreso });
+    this.guardarEnStorage();
+    this.limpiar();
+  }
+
+  limpiar() {
+    this.cuenta = '';
+    this.nombre = '';
+    this.carrera = '';
+    this.fechaIngreso = '';
+    this.error = '';
   }
 }
