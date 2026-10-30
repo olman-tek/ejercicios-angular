@@ -94,6 +94,16 @@ export class ProductoComponent implements OnInit {
     this.limpiar();
   }
 
+  eliminar(id: number) {
+    if (confirm('¿Seguro que desea eliminar este producto?')) {
+      this.productos = this.productos.filter(p => p.id !== id);
+      this.guardarEnStorage();
+      if (this.idEditando === id) {
+        this.limpiar();
+      }
+    }
+  }
+
   limpiar() {
     this.idEditando = null;
     this.codigo = '';
