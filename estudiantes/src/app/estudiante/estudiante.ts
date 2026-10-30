@@ -24,6 +24,7 @@ export class EstudianteComponent implements OnInit {
   carrera = '';
   fechaIngreso = '';
   error = '';
+  idEditando: number | null = null;
 
   constructor(private router: Router) {}
 
@@ -65,13 +66,34 @@ export class EstudianteComponent implements OnInit {
       return;
     }
 
-    const nuevoId = this.estudiantes.length ? Math.max(...this.estudiantes.map(e => e.id)) + 1 : 1;
-    this.estudiantes.push({ id: nuevoId, cuenta, nombre, carrera, fechaIngreso });
+    if (this.idEditando === null) {
+      const nuevoId = this.estudiantes.length ? Math.max(...this.estudiantes.map(e => e.id)) + 1 : 1;
+      this.estudiantes.push({ id: nuevoId, cuenta, nombre, carrera, fechaIngreso });
+    } else {
+      const i = this.estudiantes.findIndex(e => e.id === this.idEditando);
+      if (i !== -1) {
+        this.estudiantes[i] = { id: this.idEditando, cuenta, nombre, carrera, fechaIngreso };
+      }
+    }
     this.guardarEnStorage();
     this.limpiar();
   }
 
+  editar(estudiante: Estudiante) {
+    this.idEditando = estudiante.id;
+    this.cuenta = estudiante.cuenta;
+    this.nombre = estudiante.nombre;
+    this.carrera = estudiante.carrera;
+    this.fechaIngreso = estudiante.fechaIngreso;
+    this.error = '';
+  }
+
+  cancelar() {
+    this.limpiar();
+  }
+
   limpiar() {
+    this.idEditando = null;
     this.cuenta = '';
     this.nombre = '';
     this.carrera = '';

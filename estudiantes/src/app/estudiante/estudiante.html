@@ -1,12 +1,15 @@
 <h2>Registro de estudiantes</h2>
 <button (click)="cerrarSesion()">Cerrar sesión</button>
 
-<h3>Registrar estudiante</h3>
+<h3>{{ idEditando === null ? 'Registrar estudiante' : 'Editar estudiante (ID ' + idEditando + ')' }}</h3>
 <input type="text" placeholder="Cuenta" [(ngModel)]="cuenta" />
 <input type="text" placeholder="Nombre" [(ngModel)]="nombre" />
 <input type="text" placeholder="Carrera" [(ngModel)]="carrera" />
 <input type="date" [(ngModel)]="fechaIngreso" />
-<button (click)="guardar()">Guardar</button>
+<button (click)="guardar()">{{ idEditando === null ? 'Guardar' : 'Actualizar' }}</button>
+@if (idEditando !== null) {
+  <button (click)="cancelar()">Cancelar</button>
+}
 @if (error) {
   <p style="color: red">{{ error }}</p>
 }
@@ -18,7 +21,7 @@
 } @else {
   <table border="1" cellpadding="6">
     <thead>
-      <tr><th>ID</th><th>Cuenta</th><th>Nombre</th><th>Carrera</th><th>Fecha de ingreso</th></tr>
+      <tr><th>ID</th><th>Cuenta</th><th>Nombre</th><th>Carrera</th><th>Fecha de ingreso</th><th>Acciones</th></tr>
     </thead>
     <tbody>
       @for (e of estudiantes; track e.id) {
@@ -28,6 +31,7 @@
           <td>{{ e.nombre }}</td>
           <td>{{ e.carrera }}</td>
           <td>{{ e.fechaIngreso }}</td>
+          <td><button (click)="editar(e)">Editar</button></td>
         </tr>
       }
     </tbody>
