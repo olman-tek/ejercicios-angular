@@ -92,6 +92,16 @@ export class EstudianteComponent implements OnInit {
     this.limpiar();
   }
 
+  eliminar(id: number) {
+    if (confirm('¿Seguro que desea eliminar este estudiante?')) {
+      this.estudiantes = this.estudiantes.filter(e => e.id !== id);
+      this.guardarEnStorage();
+      if (this.idEditando === id) {
+        this.limpiar();
+      }
+    }
+  }
+
   limpiar() {
     this.idEditando = null;
     this.cuenta = '';
