@@ -1,2 +1,25 @@
 <h2>Registro de estudiantes</h2>
 <button (click)="cerrarSesion()">Cerrar sesión</button>
+
+<p>Total de estudiantes: {{ estudiantes.length }}</p>
+
+@if (estudiantes.length === 0) {
+  <p>No hay estudiantes registrados.</p>
+} @else {
+  <table border="1" cellpadding="6">
+    <thead>
+      <tr><th>ID</th><th>Cuenta</th><th>Nombre</th><th>Carrera</th><th>Fecha de ingreso</th></tr>
+    </thead>
+    <tbody>
+      @for (e of estudiantes; track e.id) {
+        <tr>
+          <td>{{ e.id }}</td>
+          <td>{{ e.cuenta }}</td>
+          <td>{{ e.nombre }}</td>
+          <td>{{ e.carrera }}</td>
+          <td>{{ e.fechaIngreso }}</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}
