@@ -91,6 +91,16 @@ export class MascotaComponent implements OnInit {
     this.limpiar();
   }
 
+  eliminar(id: number) {
+    if (confirm('¿Seguro que desea eliminar esta mascota?')) {
+      this.mascotas = this.mascotas.filter(m => m.id !== id);
+      this.guardarEnStorage();
+      if (this.idEditando === id) {
+        this.limpiar();
+      }
+    }
+  }
+
   limpiar() {
     this.idEditando = null;
     this.nombre = '';

@@ -31,7 +31,10 @@
           <td>{{ m.especie }}</td>
           <td>{{ m.edad }}</td>
           <td>{{ m.propietario }}</td>
-          <td><button (click)="editar(m)">Editar</button></td>
+          <td>
+            <button (click)="editar(m)">Editar</button>
+            <button (click)="eliminar(m.id)">Eliminar</button>
+          </td>
         </tr>
       }
     </tbody>
