@@ -24,6 +24,7 @@ export class MascotaComponent implements OnInit {
   edad: number | null = null;
   propietario = '';
   error = '';
+  idEditando: number | null = null;
 
   constructor(private router: Router) {}
 
@@ -64,13 +65,34 @@ export class MascotaComponent implements OnInit {
       return;
     }
 
-    const nuevoId = this.mascotas.length ? Math.max(...this.mascotas.map(m => m.id)) + 1 : 1;
-    this.mascotas.push({ id: nuevoId, nombre, especie, edad: this.edad, propietario });
+    if (this.idEditando === null) {
+      const nuevoId = this.mascotas.length ? Math.max(...this.mascotas.map(m => m.id)) + 1 : 1;
+      this.mascotas.push({ id: nuevoId, nombre, especie, edad: this.edad, propietario });
+    } else {
+      const i = this.mascotas.findIndex(m => m.id === this.idEditando);
+      if (i !== -1) {
+        this.mascotas[i] = { id: this.idEditando, nombre, especie, edad: this.edad, propietario };
+      }
+    }
     this.guardarEnStorage();
     this.limpiar();
   }
 
+  editar(mascota: Mascota) {
+    this.idEditando = mascota.id;
+    this.nombre = mascota.nombre;
+    this.especie = mascota.especie;
+    this.edad = mascota.edad;
+    this.propietario = mascota.propietario;
+    this.error = '';
+  }
+
+  cancelar() {
+    this.limpiar();
+  }
+
   limpiar() {
+    this.idEditando = null;
     this.nombre = '';
     this.especie = '';
     this.edad = null;

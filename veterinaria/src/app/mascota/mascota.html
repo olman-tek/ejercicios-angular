@@ -1,12 +1,15 @@
 <h2>Registro de mascotas</h2>
 <button (click)="cerrarSesion()">Cerrar sesión</button>
 
-<h3>Registrar mascota</h3>
+<h3>{{ idEditando === null ? 'Registrar mascota' : 'Editar mascota (ID ' + idEditando + ')' }}</h3>
 <input type="text" placeholder="Nombre" [(ngModel)]="nombre" />
 <input type="text" placeholder="Especie (perro, gato...)" [(ngModel)]="especie" />
 <input type="number" placeholder="Edad (años)" [(ngModel)]="edad" />
 <input type="text" placeholder="Propietario" [(ngModel)]="propietario" />
-<button (click)="guardar()">Guardar</button>
+<button (click)="guardar()">{{ idEditando === null ? 'Guardar' : 'Actualizar' }}</button>
+@if (idEditando !== null) {
+  <button (click)="cancelar()">Cancelar</button>
+}
 @if (error) {
   <p style="color: red">{{ error }}</p>
 }
@@ -18,7 +21,7 @@
 } @else {
   <table border="1" cellpadding="6">
     <thead>
-      <tr><th>ID</th><th>Nombre</th><th>Especie</th><th>Edad (años)</th><th>Propietario</th></tr>
+      <tr><th>ID</th><th>Nombre</th><th>Especie</th><th>Edad (años)</th><th>Propietario</th><th>Acciones</th></tr>
     </thead>
     <tbody>
       @for (m of mascotas; track m.id) {
@@ -28,6 +31,7 @@
           <td>{{ m.especie }}</td>
           <td>{{ m.edad }}</td>
           <td>{{ m.propietario }}</td>
+          <td><button (click)="editar(m)">Editar</button></td>
         </tr>
       }
     </tbody>
