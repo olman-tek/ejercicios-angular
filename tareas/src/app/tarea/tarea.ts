@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
 interface Tarea {
@@ -11,12 +12,18 @@ interface Tarea {
 
 @Component({
   selector: 'app-tarea',
-  imports: [],
+  imports: [FormsModule],
   templateUrl: './tarea.html',
   styleUrl: './tarea.css',
 })
 export class TareaComponent implements OnInit {
   tareas: Tarea[] = [];
+
+  titulo = '';
+  descripcion = '';
+  fechaLimite = '';
+  estado = 'Pendiente';
+  error = '';
 
   constructor(private router: Router) {}
 
@@ -40,5 +47,39 @@ export class TareaComponent implements OnInit {
   cerrarSesion() {
     localStorage.removeItem('sesionTareas');
     this.router.navigate(['/login']);
+  }
+
+  guardar() {
+    this.error = '';
+    const titulo = this.titulo.trim();
+    const descripcion = this.descripcion.trim();
+    const fechaLimite = this.fechaLimite;
+    const estado = this.estado;
+
+    if (!titulo || !descripcion) {
+      this.error = 'Título y descripción son obligatorios';
+      return;
+    }
+    if (!fechaLimite) {
+      this.error = 'La fecha límite es obligatoria';
+      return;
+    }
+    if (estado !== 'Pendiente' && estado !== 'Completada') {
+      this.error = 'El estado debe ser Pendiente o Completada';
+      return;
+    }
+
+    const nuevoId = this.tareas.length ? Math.max(...this.tareas.map(t => t.id)) + 1 : 1;
+    this.tareas.push({ id: nuevoId, titulo, descripcion, fechaLimite, estado });
+    this.guardarEnStorage();
+    this.limpiar();
+  }
+
+  limpiar() {
+    this.titulo = '';
+    this.descripcion = '';
+    this.fechaLimite = '';
+    this.estado = 'Pendiente';
+    this.error = '';
   }
 }
