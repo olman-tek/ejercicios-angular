@@ -1,7 +1,7 @@
 <h2>Agenda de tareas</h2>
 <button (click)="cerrarSesion()">Cerrar sesión</button>
 
-<h3>Registrar tarea</h3>
+<h3>{{ idEditando === null ? 'Registrar tarea' : 'Editar tarea (ID ' + idEditando + ')' }}</h3>
 <input type="text" placeholder="Título" [(ngModel)]="titulo" />
 <textarea placeholder="Descripción" [(ngModel)]="descripcion"></textarea>
 <input type="date" [(ngModel)]="fechaLimite" />
@@ -9,7 +9,10 @@
   <option value="Pendiente">Pendiente</option>
   <option value="Completada">Completada</option>
 </select>
-<button (click)="guardar()">Guardar</button>
+<button (click)="guardar()">{{ idEditando === null ? 'Guardar' : 'Actualizar' }}</button>
+@if (idEditando !== null) {
+  <button (click)="cancelar()">Cancelar</button>
+}
 @if (error) {
   <p style="color: red">{{ error }}</p>
 }
@@ -21,7 +24,7 @@
 } @else {
   <table border="1" cellpadding="6">
     <thead>
-      <tr><th>ID</th><th>Título</th><th>Descripción</th><th>Fecha límite</th><th>Estado</th></tr>
+      <tr><th>ID</th><th>Título</th><th>Descripción</th><th>Fecha límite</th><th>Estado</th><th>Acciones</th></tr>
     </thead>
     <tbody>
       @for (t of tareas; track t.id) {
@@ -31,6 +34,7 @@
           <td>{{ t.descripcion }}</td>
           <td>{{ t.fechaLimite }}</td>
           <td>{{ t.estado }}</td>
+          <td><button (click)="editar(t)">Editar</button></td>
         </tr>
       }
     </tbody>
